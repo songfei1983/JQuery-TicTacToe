@@ -16,6 +16,7 @@ $(function () {
         ],
         matrixTurn = -1,
         usersTurn = true,
+        status = 0,
 
     /*
      * matrixで○と×の盤面を記憶
@@ -47,6 +48,7 @@ $(function () {
         ];
         matrixTurn = -1;
         usersTurn = true;
+        status = 1;
     },
 
     /*
@@ -157,8 +159,10 @@ $(function () {
             return;
         }
 
-        // ○や×を入れる
-        $(this).html(turn);
+        if (status === 1) {
+            // ○や×を入れる
+            $(this).html(turn);
+        }
 
         // 勝負判定の配列を更新
         var x, y;
@@ -168,12 +172,14 @@ $(function () {
         moves++;
 
         //　結果を判定
+        var message = $('#message');
+        var msgText = '';
         if (win(x, y)) {
-            alert(turn + " 勝った!");
-            startNewGame();
+            msgText = turn + " 勝った!";
+            status = 2;
         } else if (moves >= SIZE * SIZE) {
-            alert("引き分け");
-            startNewGame();
+            msgText = "引き分け!";
+            status = 2;
         } else {
             turn = turn === "X" ? "O" : "X";
             matrixTurn = matrixTurn === -1 ? 1 : -1;
@@ -181,7 +187,12 @@ $(function () {
             if (usersTurn === false) {
                 think();
             }
+            msgText = "どうぞ!";
         }
+
+        if (msgText.length > 0) {
+            message.html(msgText)
+        }    
     },
 
     /*
@@ -200,8 +211,13 @@ $(function () {
             }
         }
 
+        var button = $("<div><button>New Game</button></div>");
+        button.click(startNewGame);
+
+        var message = $('<div id="message"></div>');
+
         // 盤面のHTMLを追加
-        $(document.getElementById("tictactoe") || document.body).append(board);
+        $(document.getElementById("tictactoe") || document.body).append(board).append(message).append(button);
         startNewGame();
     };
 
