@@ -6,6 +6,7 @@ table {
 	width: 330px;
 	height: 330px;
 	border: 3px solid #333333;
+	margin: 60px auto;
 }
 
 td {
