@@ -159,27 +159,38 @@ $(function () {
             return;
         }
 
-        if (status === 1) {
-            // ○や×を入れる
-            $(this).html(turn);
-        }
-
-        // 勝負判定の配列を更新
+        // クリック座標を取得
         var x, y;
         x = $(this).index();
         y = $(this).parent('tr').index();
+        
+        // メッセージ
+        var message = $('#message');
+            
+        // 終了
+        if (status === 2) {
+            return false;
+        } else {
+            message.html("対戦中!");
+            console.log('playing');
+        }
+        
+        // ○や×を入れる
+        $(this).html(turn);
+
+        // 勝負判定の配列を更新
         matrix[x][y] = matrixTurn;
         moves++;
 
         //　結果を判定
-        var message = $('#message');
-        var msgText = '';
         if (win(x, y)) {
-            msgText = turn + " 勝った!";
+            message.html(turn + " 勝った!");
             status = 2;
+            console.log('win');
         } else if (moves >= SIZE * SIZE) {
-            msgText = "引き分け!";
+            message.html("引き分け!");
             status = 2;
+            console.log('fair');
         } else {
             turn = turn === "X" ? "O" : "X";
             matrixTurn = matrixTurn === -1 ? 1 : -1;
@@ -187,12 +198,7 @@ $(function () {
             if (usersTurn === false) {
                 think();
             }
-            msgText = "どうぞ!";
         }
-
-        if (msgText.length > 0) {
-            message.html(msgText)
-        }    
     },
 
     /*
